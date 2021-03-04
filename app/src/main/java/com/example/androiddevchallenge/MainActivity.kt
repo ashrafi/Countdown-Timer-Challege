@@ -19,15 +19,22 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,39 +63,60 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun MyApp() {
     var currenTimer: Job? = null
+    var totalTimeTxt = "0"
+    var amountOfTime = remember { mutableStateOf("1") }
     Surface(color = MaterialTheme.colors.background) {
-        Column() {
-            Row() {
-                Button(
-                    onClick = {
-                        currenTimer = myCountdownTimer()
+        Box() {
+            Column() {
+                Row() {
+                    Button(
+                        onClick = {
+                            currenTimer = myCountdownTimer(amountOfTime.value.toLong())
+                        }
+                    ) {
+                        Text("Start")
+                        timeLeftInSeconds.value = amountOfTime.value.toLong()
                     }
-                ) {
-                    Text("Start")
-                }
-                Spacer(modifier = Modifier.size(20.dp))
-                Button(
-                    onClick = {
-                        currenTimer?.cancel()
-                        timeLeftInSeconds.value = 0
+                    Spacer(modifier = Modifier.size(20.dp))
+                    Button(
+                        onClick = {
+                            currenTimer?.cancel()
+                            timeLeftInSeconds.value = 0
+                        }
+                    ) {
+                        Text("Cancel")
                     }
-                ) {
-                    Text("Cancel")
                 }
+                TimerUI(timeLeftInSeconds)
             }
-            TimerUI(timeLeftInSeconds)
+
+            SimpleOutlinedTextFieldSample(amountOfTime)
         }
     }
 }
+@Composable
+fun SimpleOutlinedTextFieldSample(val_text: MutableState<String>) {
+    var text by remember { mutableStateOf("1") }
+
+    OutlinedTextField(
+        value = text,
+        onValueChange = {
+            text = it
+            val_text.value = it
+        },
+        label = { Text("Label") }
+    )
+}
+
 private val timeLeftInSeconds = MutableStateFlow<Long>(0L)
 
-private fun myCountdownTimer(): Job? {
+private fun myCountdownTimer(totalSeconds:Long): Job? {
     /**
      * Start Timer
      * TODO:  make this an alarm
      */
     var mainTimer: Job? = null
-    val totalSeconds = 60L
+
 
     mainTimer = CoroutineScope(Dispatchers.Main).launch {
         for (seconds in totalSeconds downTo 0) {

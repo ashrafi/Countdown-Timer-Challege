@@ -18,7 +18,6 @@ package com.example.androiddevchallenge
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -35,15 +34,18 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
 fun TimerUI(timeLeftInSeconds: MutableStateFlow<Long>) {
-    val totalSeconds = 60F
     val timeLeftInSecondsState = timeLeftInSeconds.collectAsState()
+    val totalSeconds = timeLeftInSeconds.value.toFloat()
     // alertime.collectAsState().value.toFloat() /  (totalTime.toFloat() * 60)
     Log.v(TAG, "This is percnet ${timeLeftInSecondsState.value / totalSeconds}")
     val timeLeft = timeLeftInSecondsState.value / totalSeconds
-    Column() {
-        TimerCountdown(timeLeftInSecondsState.value.toLong())
 
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter
+    ) {
         ProgressDial(timeLeft)
+        TimerCountdown(timeLeftInSecondsState.value.toLong())
     }
 }
 
@@ -55,7 +57,8 @@ fun ProgressDial(timeLeft: Float) {
     Box(
         modifier = Modifier
             .padding(7.dp)
-            .fillMaxSize(),
+            .fillMaxSize()
+            .background(color = Color.LightGray),
         contentAlignment = Alignment.TopCenter
     ) {
         CircularProgressIndicator(
