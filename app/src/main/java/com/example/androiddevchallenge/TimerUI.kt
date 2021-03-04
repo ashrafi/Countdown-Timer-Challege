@@ -77,7 +77,7 @@ fun ProgressDial(timeLeft: Float) {
             modifier = Modifier
                 .fillMaxSize()
                 .background(color = Color.Transparent),
-            color = // if (timeDisplay > .25) Color.Green else Color.Red //if(a < b) c else d
+            color =  if (timeDisplay > .25) Color.Green else Color.Red //if(a < b) c else d
             when {
                 timeLeft < .10 -> Color.Red
                 timeLeft < .25 -> Color.Yellow
