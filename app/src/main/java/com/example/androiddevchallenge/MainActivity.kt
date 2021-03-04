@@ -110,13 +110,12 @@ fun SimpleOutlinedTextFieldSample(val_text: MutableState<String>) {
 
 private val timeLeftInSeconds = MutableStateFlow<Long>(0L)
 
-private fun myCountdownTimer(totalSeconds:Long): Job? {
+private fun myCountdownTimer(totalSeconds: Long): Job? {
     /**
      * Start Timer
      * TODO:  make this an alarm
      */
     var mainTimer: Job? = null
-
 
     mainTimer = CoroutineScope(Dispatchers.Main).launch {
         for (seconds in totalSeconds downTo 0) {
