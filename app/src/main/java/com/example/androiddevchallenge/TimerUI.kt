@@ -18,55 +18,41 @@ package com.example.androiddevchallenge
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
-fun TimerUI(timeLeftInSeconds: MutableStateFlow<Long>) {
-    val timeLeftInSecondsState = timeLeftInSeconds.collectAsState()
-    val totalSeconds = timeLeftInSeconds.value.toFloat()
-    // alertime.collectAsState().value.toFloat() /  (totalTime.toFloat() * 60)
-    Log.v(TAG, "This is percnet ${timeLeftInSecondsState.value / totalSeconds}")
-    val timeLeft = timeLeftInSecondsState.value / totalSeconds
-
-    Box(
-        modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.BottomCenter
-    ) {
-        ProgressDial(timeLeft)
-        TimerCountdown(timeLeftInSecondsState.value.toLong())
-    }
-}
-
-@Composable
-fun ProgressDial(timeLeft: Float) {
+fun ProgressDial(
+    timeLeft: Float
+) {
     // val progressTime =
     Log.v(TAG, "progress bar $timeLeft")
-
+    LocalDensity.current.density
     Box(
-        modifier = Modifier
-            .padding(7.dp)
-            .fillMaxSize()
-            .background(color = Color.LightGray),
-        contentAlignment = Alignment.TopCenter
+        modifier = Modifier.size(430.dp),
+       /*.constrainAs(timer) {
+       top.linkTo(parent.top)
+       bottom.linkTo(parent.bottom)
+       start.linkTo(parent.start)
+       end.linkTo(parent.end),*/
+        contentAlignment = Alignment.Center
     ) {
+
         CircularProgressIndicator(
             progress = 1.0F,
             strokeWidth = 25.dp,
             modifier = Modifier
-                .fillMaxSize()
-                .background(color = Color.Transparent),
+                .padding(16.dp)
+                .background(color = Color.Transparent)
+                .fillMaxSize(),
             color = Color(
                 0x77d1d1e0,
             )
@@ -76,33 +62,15 @@ fun ProgressDial(timeLeft: Float) {
             strokeWidth = 50.dp,
             modifier = Modifier
                 .fillMaxSize()
+                .padding(16.dp)
                 .background(color = Color.Transparent),
-            color =  if (timeDisplay > .25) Color.Green else Color.Red //if(a < b) c else d
+            color = // if (timeDisplay > .25) Color.Green else Color.Red //if(a < b) c else d
             when {
-                timeLeft < .10 -> Color.Red
-                timeLeft < .25 -> Color.Yellow
+                timeLeft < .10 -> Color(0x99EE5951)
+                timeLeft < .25 -> Color(0x99EEEEBE)
                 else ->
                     Color(0x9999e699)
             }
-        )
-    }
-}
-
-@Composable
-fun TimerCountdown(timeLeft: Long) {
-    // val time = timeLeft.collectAsState().value.toFloat()
-
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        /*Text(
-            "Timer",
-            style = MaterialTheme.typography.body2
-        )
-        Spacer(modifier = Modifier.size(20.dp))*/
-        Text(
-            getFormattedStopWatchTime(timeLeft),
-            style = MaterialTheme.typography.h4
         )
     }
 }
